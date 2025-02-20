@@ -32,7 +32,7 @@ class MovieAdapter(private val movies:List<Movie>, @LayoutRes private val layout
         fun bind(movie:Movie){
 
             val img = itemView.findViewById<ImageView>(R.id.img_movie)
-            img.setImageResource(movie.coverUrl)
+
         }
     }
 }

@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.netflixapp.model.Category
-import com.example.netflixapp.model.Movie
+import com.example.netflixapp.util.CategoryTask
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,21 +26,12 @@ class MainActivity : AppCompatActivity() {
 
         val categories = mutableListOf<Category>()
 
-        for (j in 0..5) {
-            val movies = mutableListOf<Movie>()
-            for (i in 0 until 15) {
-                val movie = Movie(R.drawable.movie)
-                movies.add(movie)
-            }
-            val category = Category("cat $j", movies)
-            categories.add(category)
-        }
-
-
         val adapter = MainAdapter(categories)
         val rv = findViewById<RecyclerView>(R.id.rv_main)
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
+
+        CategoryTask().execute("https://atway.tiagoaguiar.co/fenix/netflixapp/home?apiKey=43c81700-f6da-4b67-8c08-1725e84fadf5")
     }
 
 

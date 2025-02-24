@@ -19,11 +19,14 @@ class CategoryTask(private val callback:Callback) {
 
     private val handle = Handler(Looper.getMainLooper())
     interface Callback{
+        fun onPreExecute()
         fun onResult(categories: List<Category>)
+        fun onFailure(message:String)
     }
 
     fun execute(url: String) {
 
+        callback.onPreExecute()
         val executor = Executors.newSingleThreadExecutor()
 
         executor.execute {
@@ -63,6 +66,9 @@ class CategoryTask(private val callback:Callback) {
             } catch (e: IOException) {
 
                 Log.e("Teste", e.message ?: "Erro desconhecido", e)
+                handle.post {
+                    callback.onFailure(e.message ?: "Erro desconhecido")
+                }
             }finally {
                 urlConnection?.disconnect()
                 buffer?.close()

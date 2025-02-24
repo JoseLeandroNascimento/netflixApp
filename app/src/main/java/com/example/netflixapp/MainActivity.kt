@@ -1,7 +1,9 @@
 package com.example.netflixapp
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +15,9 @@ import com.example.netflixapp.util.CategoryTask
 
 class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
+    private lateinit var progress:ProgressBar
+    private val categories = mutableListOf<Category>()
+    private lateinit var adapter:MainAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +29,10 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
             insets
         }
 
+        progress = findViewById(R.id.progress_main)
 
-        val categories = mutableListOf<Category>()
+        adapter = MainAdapter(categories)
 
-        val adapter = MainAdapter(categories)
         val rv = findViewById<RecyclerView>(R.id.rv_main)
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
@@ -35,9 +40,23 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
         CategoryTask(this).execute("https://atway.tiagoaguiar.co/fenix/netflixapp/home?apiKey=43c81700-f6da-4b67-8c08-1725e84fadf5")
     }
 
-    override fun onResult(categories: List<Category>) {
-        Log.i("Teste activity", categories.toString())
 
+    override fun onResult(categories: List<Category>) {
+        this.categories.clear()
+        this.categories.addAll(categories)
+        adapter.notifyDataSetChanged()
+        progress.visibility = View.GONE
+
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        progress.visibility = View.GONE
+    }
+
+    override fun onPreExecute() {
+
+        progress.visibility = View.VISIBLE
     }
 
 

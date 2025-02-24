@@ -1,6 +1,7 @@
 package com.example.netflixapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.netflixapp.model.Category
 import com.example.netflixapp.util.CategoryTask
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,12 @@ class MainActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
 
-        CategoryTask().execute("https://atway.tiagoaguiar.co/fenix/netflixapp/home?apiKey=43c81700-f6da-4b67-8c08-1725e84fadf5")
+        CategoryTask(this).execute("https://atway.tiagoaguiar.co/fenix/netflixapp/home?apiKey=43c81700-f6da-4b67-8c08-1725e84fadf5")
+    }
+
+    override fun onResult(categories: List<Category>) {
+        Log.i("Teste activity", categories.toString())
+
     }
 
 

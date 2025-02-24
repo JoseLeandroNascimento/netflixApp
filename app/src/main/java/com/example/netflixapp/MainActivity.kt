@@ -1,5 +1,6 @@
 package com.example.netflixapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -13,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.netflixapp.model.Category
 import com.example.netflixapp.util.CategoryTask
 
+
 class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
-    private lateinit var progress:ProgressBar
+    private lateinit var progress: ProgressBar
     private val categories = mutableListOf<Category>()
-    private lateinit var adapter:MainAdapter
+    private lateinit var adapter: MainAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,11 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
         progress = findViewById(R.id.progress_main)
 
-        adapter = MainAdapter(categories)
+        adapter = MainAdapter(categories){ id->
+            val intent = Intent(this@MainActivity,MovieActivity::class.java)
+            intent.putExtra("id",id)
+            startActivity(intent)
+        }
 
         val rv = findViewById<RecyclerView>(R.id.rv_main)
         rv.layoutManager = LinearLayoutManager(this)
@@ -50,7 +56,7 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
     }
 
     override fun onFailure(message: String) {
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         progress.visibility = View.GONE
     }
 
